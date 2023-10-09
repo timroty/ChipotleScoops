@@ -1,0 +1,5 @@
+flask
+Flask[async]
+supabase
+python-dotenv
+flask-cors

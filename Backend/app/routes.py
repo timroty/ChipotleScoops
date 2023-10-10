@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 
 from services.restaurant.restaurant_service import Restaurant_Service
+from services.rating.rating_service import Rating_Service
 
 bp = Blueprint('api', __name__)
 
@@ -20,3 +21,22 @@ async def restaurant_search():
     search_result = await restaurant_service.search(latitude, longitude)
 
     return jsonify(search_result)
+
+#Rating
+@bp.route('/rating', methods=['post'])
+def create_rating():
+    rating_service = Rating_Service()
+
+    body = request.json
+    result = rating_service.create(body['score'])
+
+    return jsonify(result)
+
+@bp.route('/rating/<store_number>', methods=['get'])
+def get_ratings_for_store(store_number):
+    rating_service = Rating_Service()
+
+    count = request.args.get('count')
+    result = rating_service.get_for_store(store_number, count)
+
+    return jsonify(result)

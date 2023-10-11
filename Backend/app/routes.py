@@ -22,13 +22,24 @@ async def restaurant_search():
 
     return jsonify(search_result)
 
+@bp.route('/restaurant/search/zipcode', methods=['post'])
+async def restaurant_search_zipcode():
+    restaurant_service = Restaurant_Service()
+
+    body = request.json
+    zipcode = body['zipcode'] or "00000"
+
+    search_result = await restaurant_service.search_zipcode(zipcode)
+
+    return jsonify(search_result)
+
 #Rating
 @bp.route('/rating', methods=['post'])
 def create_rating():
     rating_service = Rating_Service()
 
     body = request.json
-    result = rating_service.create(body['score'])
+    result = rating_service.create(body['score'], body['store_number'])
 
     return jsonify(result)
 
@@ -37,6 +48,7 @@ def get_ratings_for_store(store_number):
     rating_service = Rating_Service()
 
     count = request.args.get('count')
-    result = rating_service.get_for_store(store_number, count)
+    smooth = request.args.get('smooth')
+    result = rating_service.get_for_store(store_number, count, smooth)
 
     return jsonify(result)

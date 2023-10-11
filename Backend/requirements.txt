@@ -3,3 +3,5 @@ Flask[async]
 supabase
 python-dotenv
 flask-cors
+scipy
+pgeocode

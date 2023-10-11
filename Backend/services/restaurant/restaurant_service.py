@@ -1,5 +1,7 @@
 import requests
 import json
+import pgeocode
+import numpy as np
 from config import load_config
 
 class Restaurant_Service:
@@ -49,3 +51,12 @@ class Restaurant_Service:
             return data
         else:
             return {"Error": f"Request failed {response.status_code}"}
+    
+    async def search_zipcode(self, zipcode: str):
+        nomi = pgeocode.Nominatim('us')
+        zipcode_result = nomi.query_postal_code(zipcode) 
+
+        if np.isnan(zipcode_result['latitude']) or np.isnan(zipcode_result['longitude']):
+            raise ValueError('Invalid zipcode')
+
+        return await self.search(zipcode_result['latitude'], zipcode_result['longitude'])
